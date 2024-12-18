@@ -4,7 +4,8 @@ import { useEffect, useState, use } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "@/app/redux/slice/cartSlice";
 import { RootState } from "@/app/redux/store";
-import { ChevronLeft, Link } from 'lucide-react';
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>; // params is now a Promise
@@ -25,6 +26,11 @@ export default function ProductDetails({ params }: ProductPageProps) {
 
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.push("/products");
+  };
 
   useEffect(() => {
     async function fetchProduct() {
@@ -49,9 +55,9 @@ export default function ProductDetails({ params }: ProductPageProps) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
         <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <a href="/products" className="text-yellow-500 underline">
+        <button onClick={handleBack} className="text-yellow-500 underline">
           Back to Products
-        </a>
+        </button>
       </div>
     );
   }
@@ -59,10 +65,9 @@ export default function ProductDetails({ params }: ProductPageProps) {
   return (
     <div className="bg-black text-white w-[350px] h-[750px] mx-auto shadow-lg p-4 rounded-2xl">
       <div className="flex justify-start mb-2">
-        <button className="text-gray-300 text-lg" onClick={}>
-        <ChevronLeft />
+        <button className="text-gray-300 text-lg" onClick={handleBack}>
+          <ChevronLeft />
         </button>
-        
       </div>
       <img
         src={product.image}
