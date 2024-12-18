@@ -26,7 +26,7 @@ const CardComponent: React.FC = () => {
   const handleCheckout = () => {
     alert("Items are dispatched successfully!");
     dispatch(clearCart());
-    router.push("/"); // Navigate to the first screen
+    router.push("/"); // Navigate to the fiRs.t screen
   };
 
   return (
@@ -36,7 +36,7 @@ const CardComponent: React.FC = () => {
         <button onClick={() => router.push("/")}>
           <ChevronLeft className="text-white" />
         </button>
-        <h1 className="text-3xl font-bold">Cart</h1>
+        <h1 className="text-3xl font-bold">Cart </h1>
       </div>
 
       {/* Cart Items */}
@@ -55,22 +55,23 @@ const CardComponent: React.FC = () => {
                 className="w-16 h-16 object-contain rounded"
               />
               <div className="ml-4 flex-1">
-                <p className="text-sm font-semibold truncate">{item.title}</p>
+                <p className="text-sm font-semibold truncate max-w-[200px]">{item.title}</p>
                 <p className="text-gray-400 text-xs mt-1">
-                  Price: ${item.price} x {item.quantity}
+                  Price: Rs. {item.price} x {item.quantity}
                 </p>
+                <button
+                className="text-red-400 hover:text-red-700  text-sm font-thin"
+                onClick={() => dispatch(removeFromCart(item.id))}
+              >
+                Remove
+              </button>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <button onClick={() => dispatch(increaseQuantity(item.id))}>➕</button>
                 <span>{item.quantity}</span>
                 <button onClick={() => dispatch(decreaseQuantity(item.id))}>➖</button>
               </div>
-              <button
-                className="text-red-500 hover:text-red-700 ml-4"
-                onClick={() => dispatch(removeFromCart(item.id))}
-              >
-                Remove
-              </button>
+              
             </div>
           ))
         )}
@@ -78,18 +79,18 @@ const CardComponent: React.FC = () => {
 
       {/* Summary Section */}
       {cartItems.length > 0 && (
-        <div className="w-[375px] p-4 border-t border-gray-700">
+        <div className="w-[375px] p-4 border-t border-gray-700 fixed bottom-0  z-50 bg-black">
           <div className="flex justify-between mb-2">
             <span>Subtotal</span>
-            <span>${calculateSubtotal().toFixed(2)}</span>
+            <span>Rs. {calculateSubtotal().toFixed(2)}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>Discount (5%)</span>
-            <span>- ${discount.toFixed(2)}</span>
+            <span>- Rs. {discount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-semibold text-lg mb-2">
             <span>Order Total</span>
-            <span>${orderTotal.toFixed(2)}</span>
+            <span>Rs. {orderTotal.toFixed(2)}</span>
           </div>
           <button
             className="w-full bg-yellow-500 text-black font-semibold py-2 rounded"

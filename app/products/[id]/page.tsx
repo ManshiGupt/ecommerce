@@ -2,10 +2,15 @@
 
 import { useEffect, useState, use } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "@/app/redux/slice/cartSlice";
+import { addToCart } from "@/app/redux/slice/cartSlice";
 import { RootState } from "@/app/redux/store";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {
+  increaseQuantity,
+  decreaseQuantity,
+  
+} from "@/app/redux/slice/cartSlice";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>; // params is now a Promise
@@ -31,6 +36,9 @@ export default function ProductDetails({ params }: ProductPageProps) {
   const handleBack = () => {
     router.push("/products");
   };
+  const handlefor = () => {
+    router.push("/cart");
+  };
 
   useEffect(() => {
     async function fetchProduct() {
@@ -48,6 +56,9 @@ export default function ProductDetails({ params }: ProductPageProps) {
     }
     fetchProduct();
   }, [id]);
+
+  const cartItem = cartItems.find((item) => item.id === product?.id);
+
 
   if (loading) return <div className="text-center text-white">Loading...</div>;
 
@@ -76,29 +87,34 @@ export default function ProductDetails({ params }: ProductPageProps) {
       />
       <h1 className="text-xl font-bold mb-2">{product.title}</h1>
       <p className="text-sm text-gray-400 mb-4">
-        {product.description.length > 80
+        {/* {product.description.length > 80
           ? `${product.description.substring(0, 80)}...`
-          : product.description}
+          : product.description} */}
+          {product.description}
       </p>
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex flex-row gap-28">
+      <p className="text-lg font-bold text-white mb-6">Rs. {product.price}</p>
+      <div className="flex items-center gap-6 mb-7">
         <button
           className="bg-gray-700 text-yellow-500 rounded-full w-6 h-6 flex items-center justify-center"
-          onClick={() => dispatch(removeFromCart(product.id))}
+          onClick={() => dispatch(decreaseQuantity(product.id))}
         >
           ➖
         </button>
-        <span>{cartItems.filter((item) => item.id === product.id).length}</span>
+       
+        <span>{cartItem?.quantity || 0}</span>
         <button
           className="bg-gray-700 text-yellow-500 rounded-full w-6 h-6 flex items-center justify-center"
-          onClick={() => dispatch(addToCart(product))}
+          onClick={() => dispatch(increaseQuantity(product.id))}
         >
           ➕
         </button>
       </div>
-      <p className="text-lg font-bold text-white mb-6">${product.price}</p>
+      </div>
       <button
         className="w-full bg-yellow-500 text-black py-3 rounded-full font-bold shadow-md"
-        onClick={() => dispatch(addToCart(product))}
+        // onClick={() => dispatch(addToCart({ ...product, quantity: 1 }))}
+        onClick={handlefor} 
       >
         Add to cart
       </button>

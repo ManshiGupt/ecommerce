@@ -122,13 +122,22 @@ export default function ProductsList() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Product List</h1>
         <div className="relative">
-          <span className="absolute top-[-10px] right-[-5px] bg-red-500 text-xs rounded-full px-2">
-            {cartItems.length}
-          </span>
-          <Link href="/cart" className="mt-0 mr-3 cursor-pointer">
-            🛒
-          </Link>
-        </div>
+  {cartItems.length > 0 && ( // Show the badge only when cart has items
+    <span className="absolute top-[-10px] right-[-5px] bg-red-500 text-xs rounded-full px-2">
+      {cartItems.length}
+    </span>
+  )}
+  {cartItems.length > 0 ? (
+    <Link href="/cart" className="mt-0 mr-3 cursor-pointer">
+      🛒
+    </Link>
+  ) : (
+    <div className="mt-0 mr-3 text-gray-400 cursor-not-allowed">
+      🛒
+    </div>
+  )}
+</div>
+
       </div>
 
       {/* Category Navigation */}
@@ -164,7 +173,7 @@ export default function ProductsList() {
                 {product.title}
               </h3>
               <p className="text-yellow-400 mt-1">⭐ {product.rating.rate}</p>
-              <p className="text-green-400 font-semibold">${product.price}</p>
+              <p className="text-green-400 font-semibold">Rs. {product.price}</p>
               <button
                 onClick={(e) => {
                   e.preventDefault(); // Prevent navigation when clicking the button
