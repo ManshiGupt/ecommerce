@@ -6,8 +6,8 @@ import { RootState } from "@/app/redux/store";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
-  increaseQuantity,
   decreaseQuantity,
+  addToCart,
   
 } from "@/app/redux/slice/cartSlice";
 
@@ -18,9 +18,11 @@ interface ProductPageProps {
 interface Product {
   id: number;
   title: string;
-  description: string;
   price: number;
   image: string;
+  quantity: number;
+  category: string;
+  description: string
 }
 
 export default function ProductDetails({ params }: ProductPageProps) {
@@ -104,7 +106,7 @@ export default function ProductDetails({ params }: ProductPageProps) {
         <span>{cartItem?.quantity || 0}</span>
         <button
           className="bg-gray-700 text-yellow-500 rounded-full w-6 h-6 flex items-center justify-center"
-          onClick={() => dispatch(increaseQuantity(product.id))}
+          onClick={() => dispatch(addToCart(product))}
         >
           ➕
         </button>

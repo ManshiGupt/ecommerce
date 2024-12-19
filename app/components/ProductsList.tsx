@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/slice/cartSlice";
 import { RootState } from "../redux/store";
 import Link from "next/link";
+
 
 interface Rating {
   rate: number;
@@ -24,6 +25,7 @@ interface Product {
 export default function ProductsList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [category, setCategory] = useState("all");
+  const [disabledButtons, setDisabledButtons] = useState<Set<number>>(new Set());
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const dispatch = useDispatch();
 
@@ -40,6 +42,15 @@ export default function ProductsList() {
     category === "all"
       ? products
       : products.filter((product) => product.category === category);
+
+      const handleAddToCart = useCallback(
+        (product: Product) => {
+          dispatch(addToCart(product));
+          setDisabledButtons((prev) => new Set(prev).add(product.id)); // Mark the button as disabled
+        },
+        [dispatch]
+      );
+    
 
   return (
     <div className="bg-black text-white min-h-screen p-4 max-w-[400px] mx-auto">
@@ -101,14 +112,19 @@ export default function ProductsList() {
                 Rs. {product.price}
               </p>
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(addToCart(product));
-                }}
-                className="text-yellow-500 mt-2 py-1 px-14 rounded-lg bg-black"
-              >
-                +
-              </button>
+              onClick={(e) => {
+                e.preventDefault();
+                handleAddToCart(product);
+              }}
+              disabled={disabledButtons.has(product.id)} // Disable if already clicked
+              className={`mt-2 py-1 px-14 rounded-lg ${
+                disabledButtons.has(product.id)
+                  ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+                  : "bg-black text-yellow-500"
+              }`}
+            >
+              {disabledButtons.has(product.id) ? "Added" : "+"}
+            </button>
             </div>
           </Link>
         ))}
