@@ -2,7 +2,6 @@
 
 import { useEffect, useState, use } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "@/app/redux/slice/cartSlice";
 import { RootState } from "@/app/redux/store";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
